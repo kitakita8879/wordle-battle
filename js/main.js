@@ -4,24 +4,24 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function createSquare1(){
         const gameBoard = document.getElementById("player1");
 
-        for (let X = 0;  x<30; x++){
+        for (let x = 0; x <30; x++){
             let square = document.createElement("div");
             square.classList.add("square");
-            square.setAttribute("id", "square1"+ x +1);
+            square.setAttribute("id", "square1-" + (x +1));
             gameBoard.appendChild(square);
         }
     }
     function createSquare2(){
         const gameBoard = document.getElementById("player2");
 
-        for (let  y = 0;  y <30;  y++){
+        for (let y = 0; y <30; y++){
             let square = document.createElement("div");
             square.classList.add("square");
-
-            square.setAttribute("id", "square2"+ y +1);
+            square.setAttribute("id", "square2-" + (y +1));
             gameBoard.appendChild(square);
         }
     }
+
 
     //鍵盤設置
     const keyboard=[
