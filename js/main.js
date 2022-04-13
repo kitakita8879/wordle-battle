@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
         for (let  y = 0;  y <30;  y++){
             let square = document.createElement("div");
             square.classList.add("square");
-            
-            square.setAttribute("id", "square1"+ y +1);
+
+            square.setAttribute("id", "square2"+ y +1);
             gameBoard.appendChild(square);
         }
     }
