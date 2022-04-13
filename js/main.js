@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             let square = document.createElement("div");
             square.classList.add("square");
             square.setAttribute("id", "square1"+ x +1);
-            gameBoard.appendChild(square);;
+            gameBoard.appendChild(square);
         }
     }
     function createSquare2(){
