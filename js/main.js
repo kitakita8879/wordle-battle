@@ -4,20 +4,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function createSquare1(){
         const gameBoard = document.getElementById("player1");
 
-        for (let index = 0; index <30; index++){
+        for (let X = 0;  x<30; x++){
             let square = document.createElement("div");
             square.classList.add("square");
-            square.setAttribute("id", index +1);
+            square.setAttribute("id", "square1"+ x +1);
             gameBoard.appendChild(square);
         }
     }
     function createSquare2(){
         const gameBoard = document.getElementById("player2");
 
-        for (let index = 0; index <30; index++){
+        for (let  y = 0;  y <30;  y++){
             let square = document.createElement("div");
             square.classList.add("square");
-            square.setAttribute("id", index +1);
+            
+            square.setAttribute("id", "square1"+ y +1);
             gameBoard.appendChild(square);
         }
     }
