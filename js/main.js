@@ -1,7 +1,16 @@
 document.addEventListener("DOMContentLoaded", ()=>{
+    
+    //按創建房間按鈕切換至遊戲畫面
+    const createBtn = document.getElementById("createRoom");
+    createBtn.onclick = ()=>{
+        document.getElementById("container").style.display = '';
+        document.getElementById("title_container").style.display = 'none';
+    }
+
     createSquare1();
     createSquare2();
 
+    //猜測區塊1、2
     function createSquare1(){
         const gameBoard = document.getElementById("player1");
 
@@ -25,7 +34,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
         }
     }
 
-
     //鍵盤設置
     const keyboard=[
         ['Q','W','E','R','T','Y','U','I','O','P'],
@@ -46,7 +54,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
         kb.appendChild(keyboard_row);
     }
 
-    
+
+
     let guessWords = [[]];
     let availableSpace = 1;
     let word = 'dairy';//答案的單字(測試用)
@@ -156,4 +165,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
         lastLetterEl.textContent = '';
         availableSpace = availableSpace -1;
     }
+
 });

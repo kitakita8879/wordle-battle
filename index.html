@@ -13,17 +13,25 @@
     />
 </head>
 <body>
-    <div id="title-container">
-
-        <header>
-               <h1 class="title">WORDLE BATTLE</h1>
-        </header>
-       
+    <div id="title_container">
         <div id="option">
-             <header>
-                <h2 class="CreateRoom">Create Room</h1>
-                <h2 class="ConnectRoom">Connect Room</h1>
-             </header>
+            <header>
+                <h1 class="title">WORDLE BATTLE</h1>
+            </header>
+            <div class="room">
+                <div id="level_select">
+                    <label><input type="radio" id="normal" name="level" value="normal" checked>標準模式</label>
+                    <label><input type="radio" id="hard" name="level" value="hard">困難模式</label>
+                </div>
+                <button id="createRoom">Create Room</button>
+
+                <div><h4 style="color: gainsboro; display: flex;justify-content: center;">
+                    OR type the ROOM ID your friend gave you</h4></div>
+                
+                <input class="roomId" placeholder="123456789" type="text" 
+                inputmode="numeric" maxlength="9" tabindex="0" >
+                <button id="connectRoom">Connect Room</button>
+            </div>
         </div>
 
     </div>
