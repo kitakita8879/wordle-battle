@@ -1,3 +1,17 @@
+var admin = require("firebase-admin");
+
+var serviceAccount = require("path/to/serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://ncue-web-wordle-project-default-rtdb.firebaseio.com"
+});
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", ()=>{
     
     //按創建房間按鈕切換至遊戲畫面
