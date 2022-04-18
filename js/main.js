@@ -1,13 +1,13 @@
 var admin = require("firebase-admin");
 
-var serviceAccount = require("path/to/serviceAccountKey.json");
+var serviceAccount = require("./ncue-web-wordle-project-firebase-adminsdk-m478c-df3004c9aa.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://ncue-web-wordle-project-default-rtdb.firebaseio.com"
 });
 
-
+var firebase = admin.database();
 
 
 
