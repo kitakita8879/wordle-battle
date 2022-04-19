@@ -5,9 +5,10 @@ firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
   databaseURL: "https://ncue-web-wordle-project-default-rtdb.firebaseio.com"
 });
-var firebaseDB = firebase.database();
+//var firebaseDB = firebase.database();
 //var firebaseDB = firebase.database()
-firebaseDB.ref("theText").set("caught string")
+
+//firebaseDB.ref("theText").set("caught string")
 
  
 module.exports = firebase;
