@@ -7,6 +7,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
         document.getElementById("title_container").style.display = 'none';
     }
 
+    //按問號顯示遊戲規則
+    const help_btn = document.getElementById("help").addEventListener(
+        "click", ()=>{
+            Swal.fire({title: "遊戲說明",
+            html: '． 輸入由5個字母組成的單字<br />' + 
+            '． 灰色為沒有該字母<br />．黃色為有該字母，但位置不對<br />．綠色為字母和位置皆正確<br />' + 
+            '． 雙人對戰時，最快猜中答案者勝利<br />' + 
+            '． 困難模式下，任何已揭曉的提示必須在下一個輸入的答案中使用',
+            icon:"question",
+            color: "#dcdcdc"});
+        }
+    );
+
     createSquare1();
     createSquare2();
 
@@ -60,6 +73,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let availableSpace = 1;
     let word = 'dairy';//答案的單字(測試用)
     let guessedWordCount = 0;
+    let guessSucess = false;
     
     //按鍵盤
     const keys = document.querySelectorAll(".keyboard_row button");
@@ -68,17 +82,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
         keys[k].onclick = ( {target} ) =>{
             const letter = target.getAttribute("data-key");
 
-            if (letter === 'Enter') {//按ENTER
-                handleSubmitWord();
-                return;
-            }
+            if(!guessSucess){
+                if (letter === 'Enter') {//按ENTER
+                    handleSubmitWord();
+                    return;
+                }
 
-            if (letter === 'Del') {//按DEL
-                handleDeleteLetter();
-                return;
-            }
+                if (letter === 'Del') {//按DEL
+                    handleDeleteLetter();
+                    return;
+                }
 
-            updateGuessWords(letter);
+                updateGuessWords(letter);
+            }
         }       
     }
 
@@ -123,7 +139,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function handleSubmitWord(){
         const currentWordArr = getCurrentWordArr();
         if (currentWordArr.length !==5) {
-            window.alert("Word must be 5 letters");
+            Swal.fire({title:"警告",text:"所猜測單字必須由5個字母所組成",icon:"warning",color: "#dcdcdc"});
         }else{
             const currentWord = currentWordArr.join('');
 
@@ -139,31 +155,29 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
                 },interval * index);
             });
-        guessedWordCount +=1;
+            guessedWordCount +=1;
+            guessWords.push([]);
 
             if(currentWord === word.toUpperCase()){
-                window.alert("Congratulation!");
-            }
-
-            if(guessWords.length === 6){
-                window.alert(`Sorry, u have no more guesses! The word is ${word}.`);
-            }
-
-            guessWords.push([]);
+                Swal.fire({title:"恭喜!",text:"恭喜答對!",icon:"success",color: "#dcdcdc"});
+                guessSucess = true;
+            }else if(guessWords.length === 7){
+                Swal.fire({title:"錯誤",text:`ㄅ歉，你猜錯啦，正確單字為 ${word}。`,icon:"error",color: "#dcdcdc"});
+            }    
         }
-        
     }
 
     //按刪除鍵
     function handleDeleteLetter(){
-        const currentWordArr = getCurrentWordArr();
-        const renovedLetter = currentWordArr.pop();
+        if (availableSpace%5 !== 1) {
+            const currentWordArr = getCurrentWordArr();
+            const removedLetter = currentWordArr.pop();
 
-        guessWords[guessWords.length -1] = currentWordArr;
+            guessWords[guessWords.length -1] = currentWordArr;
 
-        const lastLetterEl = document.getElementById("square1_" + String(availableSpace -1));
-        lastLetterEl.textContent = '';
-        availableSpace = availableSpace -1;
+            const lastLetterEl = document.getElementById("square1_" + String(availableSpace -1));
+            lastLetterEl.textContent = '';
+            availableSpace = availableSpace -1;
+        }
     }
-
 });
