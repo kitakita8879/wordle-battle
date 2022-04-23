@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
-import { getDatabase, ref, set, get,update } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+import { getDatabase, ref,child, set, get,update ,onValue} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
 var firebaseConfig = {
     apiKey: "AIzaSyAbBWyUP052BLXtTFAS8boPdphjBDTb6UA",
@@ -14,6 +14,15 @@ var firebaseConfig = {
   };
 const app = initializeApp(firebaseConfig);
 const firedb = getDatabase(app);
+const rdbRef = ref(getDatabase(app));
+var competitorid = 0
+var yourid = 0
+var word = '' //答案的單字
+var room_number = 0
+var youtime=1;
+var competitortime=1;
+var competitorguessWords = [[]];
+var competitorkeyword =''
 
 function getRandom(min,max){
     return Math.floor(Math.random()*(max-min+1))+min;
@@ -26,39 +35,90 @@ document.addEventListener("DOMContentLoaded", ()=>{
     //按創建房間按鈕切換至遊戲畫面
     const createBtn = document.getElementById("createRoom");
     createBtn.onclick = ()=>{
-        var room_number = getRandom(1000,9999);
+        room_number = getRandom(1000,9999);
         var people_number1 = getRandom(10000,99999);
         var people_number2 = getRandom(10000,99999);
-
+        word = WORDS[Math.floor(Math.random() * WORDS.length)]//答案的單字
+        document.getElementsByClassName("room_id_title")[0].innerText = "   Waiting other people ...\n roomId="+room_number;
+        yourid=people_number1
+        competitorid = people_number2
         set(ref(firedb,'room/' + room_number + '/' ),{
             'people1': people_number1,
             'people2': people_number2,
-            'number' : '0'
+            'number' : 0
+        });
+        update(ref(firedb,'game/' + room_number +'/' ),{
+            'win_keyword': word,
+              });
+
+        document.getElementById("game").style.display = 'none';
+        document.getElementById("title_container").style.display = 'none';
+        onValue((ref(firedb,'room/'+ room_number +"/" + "number")), snapshot => {   //一直去監聽
+
+            let test = snapshot.val()
+            console.log(snapshot.val())
+            if (test == 1){
+                document.getElementById("game").style.display = '';
+                document.getElementsByClassName("room_id_title")[0].innerText = "roomId="+room_number;
+
+                startGame()
+                //update to start game
+                
+            }
+
+          });
+
+
+    }
+
+    const connectBtn = document.getElementById("connectRoom");
+    connectBtn.onclick = ()=>{
+
+        room_number =  parseInt(document.getElementsByClassName('roomId')[0].value);
+        //to get roomid is or not created
+        const three = onValue((ref(firedb,'room/'+ room_number +"/")), snapshot => {   //一直去監聽
+            let number2 = snapshot.val()
+            if (number2 != null) {
+                 //get you id
+        const five3  = get(child(rdbRef, `room/${room_number}/people2/`)).then((snapshot) => {
+                yourid=(snapshot.val())
+                console.log('youdid:'+yourid);
+                });
+    
+                //get competitorid
+        const five2 = get(child(rdbRef, `room/${room_number}/people1/`)).then((snapshot) => {
+                    //console.log(snapshot.val());
+                    var competitorid=(snapshot.val())
+                    console.log('competitorid:'+competitorid);
+                });
+    
+                //get word
+        const five52 = get(child(rdbRef, `game/${room_number}/win_keyword/`)).then((snapshot) => {
+                        //console.log(snapshot.val());
+                        word=snapshot.val()
+                        console.log('word:'+word);
+                    });
+    
+                //update to start game
+                const five4=update(ref(firedb,'room/' + room_number +'/' ),{
+                    'number': 1,
+                });
+                //start game and close memu
+                document.getElementById("game").style.display = '';
+                document.getElementById("title_container").style.display = 'none';
+                document.getElementsByClassName("room_id_title")[0].innerText = " roomId="+room_number;
+                startGame()
+
+    
+            }         
+            else {
+                Swal.fire({title:"錯誤",text:`沒有找到該房間請重新輸入`,icon:"error",color: "#dcdcdc"});
+            }
         });
 
-        set(ref(firedb,'game/' + room_number +'/' +people_number1+"/" ),{
-            'keyword1': "",
-            'keyword2': "",
-            'keyword3': "",
-            'keyword4': "",
-            'keyword5': "",  
-            'number': "",    });
 
-        set(ref(firedb,'game/' + room_number +'/' +people_number2+"/" ),{
-            'keyword1': "",
-            'keyword2': "",
-            'keyword3': "",
-            'keyword4': "",
-            'keyword5': "",  
-            'number': "",    });
 
-        update(ref(firedb,'game/' + room_number +'/' ),{
-            'win_keyword': "",
-            'win_name': ""  });
-        
-        document.getElementById("container").style.display = '';
-        document.getElementById("title_container").style.display = 'none';
-    }
+};
 
     //按問號顯示遊戲規則
     const help_btn = document.getElementById("help").addEventListener(
@@ -72,9 +132,37 @@ document.addEventListener("DOMContentLoaded", ()=>{
             color: "#dcdcdc"});
         }
     );
-
+    
     createSquare1();
     createSquare2();
+
+    function startGame(){
+
+        const two = onValue((ref(firedb,'game/'+ room_number + "/win_name/")), snapshot => {
+            console.log(snapshot.val())
+
+            let name = snapshot.val()
+            if (name != null){ 
+            if (name==competitorid){
+                Swal.fire({title:"錯誤",text:`ㄅ歉，對手猜對了，你輸啦，正確單字為 ${word}。`,icon:"error",color: "#dcdcdc"});
+            }
+            }
+        });
+        
+        const one = onValue((ref(firedb,`game/${room_number}/${competitorid}/keyword/`)), snapshot => {
+            console.log(snapshot.val())
+
+            let competitorkeyword = snapshot.val()
+            if (competitorkeyword != null){
+                console.log(competitorkeyword)
+                Swal.fire({title:"對手文字",text:` ${competitorkeyword}。`,icon:"error",color: "#dcdcdc"});
+
+            };
+        });
+
+
+
+    }
 
     //猜測區塊1、2
     function createSquare1(){
@@ -124,7 +212,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     let guessWords = [[]];
     let availableSpace = 1;
-    let word = WORDS[Math.floor(Math.random() * WORDS.length)]//答案的單字
+    //var word = WORDS[Math.floor(Math.random() * WORDS.length)]//答案的單字
     let guessedWordCount = 0;
     let guessSucess = false;
     let nextLetter = 0;//判斷delete
@@ -166,11 +254,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
             const availableSpaceEl = document.getElementById("square1_" + String(availableSpace));
             availableSpace = availableSpace +1;
             console.log(availableSpace);
-
             availableSpaceEl.textContent = letter;
             nextLetter +=1;
         }
     }
+
+    
     
     //猜測後的字母顏色
     function getTileColor(letter,index){
@@ -190,6 +279,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
         return "rgb(181,159,59)";//正確字母 錯誤位置 黃色
     }
 
+    //對手提交答案
+    function competitorhandleSubmitWord(){
+
+
+
+    }
+
+    
     //按ENTER鍵提交答案
     function handleSubmitWord(){
         const currentWordArr = getCurrentWordArr();
@@ -197,9 +294,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
             Swal.fire({title:"警告",text:"所猜測單字必須由5個字母所組成",icon:"warning",color: "#dcdcdc"});
         }else{
             const currentWord = currentWordArr.join('');
-
             const firstLetterId = guessedWordCount * 5 + 1;
             const interval = 200;
+
             currentWordArr.forEach((letter, index) => {
                 setTimeout(() =>{
                     const tileColor = getTileColor(letter,index);
@@ -214,10 +311,22 @@ document.addEventListener("DOMContentLoaded", ()=>{
             guessWords.push([]);
             nextLetter = 0;
 
-            if(currentWord === word.toUpperCase()){
+            update(ref(firedb,'game/'+room_number+'/'+yourid+'/'),{
+                    'keyword' : currentWord,
+                    'number' : youtime
+                });
+            youtime = youtime + 1;
+
+            if(currentWord == word.toUpperCase()){
+                update(ref(firedb,'game/' + room_number +'/'),{
+                    'win_name' : yourid,
+                });
                 Swal.fire({title:"恭喜!",text:"恭喜答對!",icon:"success",color: "#dcdcdc"});
                 guessSucess = true;
             }else if(guessWords.length === 7){
+                update(ref(firedb,'game/' + room_number +'/'),{
+                    'win_name' : competitorid,
+                });
                 Swal.fire({title:"錯誤",text:`ㄅ歉，你猜錯啦，正確單字為 ${word}。`,icon:"error",color: "#dcdcdc"});
             }    
         }
