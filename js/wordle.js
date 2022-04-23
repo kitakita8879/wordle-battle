@@ -19,6 +19,8 @@ function getRandom(min,max){
     return Math.floor(Math.random()*(max-min+1))+min;
 };
 
+import {WORDS} from './word.js';
+
 document.addEventListener("DOMContentLoaded", ()=>{
 
     //按創建房間按鈕切換至遊戲畫面
@@ -63,7 +65,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         "click", ()=>{
             Swal.fire({title: "遊戲說明",
             html: '． 輸入由5個字母組成的單字<br />' + 
-            '． 灰色為沒有該字母<br />．黃色為有該字母，但位置不對<br />．綠色為字母和位置皆正確<br />' + 
+            '． 灰色為沒有該字母<br />． 黃色為有該字母，但位置不對<br />． 綠色為字母和位置皆正確<br />' + 
             '． 雙人對戰時，最快猜中答案者勝利<br />' + 
             '． 困難模式下，任何已揭曉的提示必須在下一個輸入的答案中使用',
             icon:"question",
@@ -122,9 +124,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     let guessWords = [[]];
     let availableSpace = 1;
-    let word = 'dairy';//答案的單字(測試用)
+    let word = WORDS[Math.floor(Math.random() * WORDS.length)]//答案的單字
     let guessedWordCount = 0;
     let guessSucess = false;
+    let nextLetter = 0;//判斷delete
     
     //按鍵盤
     const keys = document.querySelectorAll(".keyboard_row button");
@@ -165,6 +168,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             console.log(availableSpace);
 
             availableSpaceEl.textContent = letter;
+            nextLetter +=1;
         }
     }
     
@@ -208,6 +212,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             });
             guessedWordCount +=1;
             guessWords.push([]);
+            nextLetter = 0;
 
             if(currentWord === word.toUpperCase()){
                 Swal.fire({title:"恭喜!",text:"恭喜答對!",icon:"success",color: "#dcdcdc"});
@@ -220,7 +225,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     //按刪除鍵
     function handleDeleteLetter(){
-        if (availableSpace%5 !== 1) {
+        if (nextLetter !== 0) {
             const currentWordArr = getCurrentWordArr();
             const removedLetter = currentWordArr.pop();
 
