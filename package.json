@@ -1,9 +1,8 @@
 {
   "dependencies": {
     "express": "^4.17.3",
-    "firebase": "^9.6.11",
+    "firebase": "^9.6.10",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.14.1"
-
   }
 }

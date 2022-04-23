@@ -1,8 +1,59 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
+import { getDatabase, ref, set, get,update } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+
+var firebaseConfig = {
+    apiKey: "AIzaSyAbBWyUP052BLXtTFAS8boPdphjBDTb6UA",
+    authDomain: "ncue-web-wordle-project.firebaseapp.com",
+    databaseURL: "https://ncue-web-wordle-project-default-rtdb.firebaseio.com",
+    projectId: "ncue-web-wordle-project",
+    storageBucket: "ncue-web-wordle-project.appspot.com",
+    messagingSenderId: "165117926835",
+    appId: "1:165117926835:web:56c3e090f406aa2ad0bfc6",
+    measurementId: "G-D8MTTG8H3T"
+  };
+const app = initializeApp(firebaseConfig);
+const firedb = getDatabase(app);
+
+function getRandom(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min;
+};
+
 document.addEventListener("DOMContentLoaded", ()=>{
-    
+
     //按創建房間按鈕切換至遊戲畫面
     const createBtn = document.getElementById("createRoom");
     createBtn.onclick = ()=>{
+        var room_number = getRandom(1000,9999);
+        var people_number1 = getRandom(10000,99999);
+        var people_number2 = getRandom(10000,99999);
+
+        set(ref(firedb,'room/' + room_number + '/' ),{
+            'people1': people_number1,
+            'people2': people_number2,
+            'number' : '0'
+        });
+
+        set(ref(firedb,'game/' + room_number +'/' +people_number1+"/" ),{
+            'keyword1': "",
+            'keyword2': "",
+            'keyword3': "",
+            'keyword4': "",
+            'keyword5': "",  
+            'number': "",    });
+
+        set(ref(firedb,'game/' + room_number +'/' +people_number2+"/" ),{
+            'keyword1': "",
+            'keyword2': "",
+            'keyword3': "",
+            'keyword4': "",
+            'keyword5': "",  
+            'number': "",    });
+
+        update(ref(firedb,'game/' + room_number +'/' ),{
+            'win_keyword': "",
+            'win_name': ""  });
+        
         document.getElementById("container").style.display = '';
         document.getElementById("title_container").style.display = 'none';
     }
