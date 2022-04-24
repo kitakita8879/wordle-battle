@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
-import { getDatabase, ref,child, set, get,update ,onValue} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+import { getDatabase, ref,child, set, get,update ,onValue ,off} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
 var firebaseConfig = {
     apiKey: "AIzaSyAbBWyUP052BLXtTFAS8boPdphjBDTb6UA",
@@ -32,6 +32,75 @@ import {WORDS} from './word.js';
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
+    const connectBtn = document.getElementById("connectRoom");
+    connectBtn.onclick = ()=>{
+
+        room_number =  parseInt(document.getElementsByClassName('roomId')[0].value);
+        //to get roomid is or not created
+        //get you id
+
+        const five5  = get(child(rdbRef, `room/${room_number}/`)).then((snapshot) => {
+            
+            if(snapshot.val()!=null && snapshot.val()!= ''){
+
+                const five3  = get(child(rdbRef, `room/${room_number}/people2/`)).then((snapshot) => {
+                        yourid=(snapshot.val())
+                        console.log('youdid:'+yourid);
+                        });
+
+                        //get competitorid
+                const five2 = get(child(rdbRef, `room/${room_number}/people1/`)).then((snapshot) => {
+                            //console.log(snapshot.val());
+                            competitorid=(snapshot.val())
+                            console.log('competitorid:'+competitorid);
+                        });
+            
+                        //get word
+                const five52 = get(child(rdbRef, `game/${room_number}/win_keyword/`)).then((snapshot) => {
+                                //console.log(snapshot.val());
+                                word=snapshot.val()
+                                console.log('word:'+word);
+                            });
+                        //update to start game
+
+                const five4=update(ref(firedb,'room/' + room_number +'/' ),{
+                        'number': 1,
+                    });
+                    //start game and close memu
+                    document.getElementById("game").style.display = 'none';
+                    document.getElementById("title_container").style.display = 'none';
+                    readytime()
+            }         
+            else {
+            Swal.fire({title:"錯誤",text:`沒有找到該房間請重新輸入`,icon:"error",color: "#dcdcdc"});
+            }
+        });
+};
+
+    function readytime(){
+
+        let time = 5
+        let starttime = 1
+        var timeoutID = setTimeout(timeout, 5000);
+        var intervalID = setInterval(function() {
+            document.getElementsByClassName("room_id_title")[0].innerText = "Ready to start : "+time;
+            time = time - 1; 
+        }, 1000);
+        function timeout(){
+                clearInterval(intervalID);
+                startGame()
+                var startGametime = setInterval(function() {
+                    document.getElementsByClassName("room_id_title")[0].innerText = "Start!!!  Time : "+starttime;   
+                    document.getElementById("game").style.display = '';
+                    document.getElementById("title_container").style.display = 'none';
+                    starttime = starttime + 1 ;
+    
+                }, 1000);
+                
+
+            }
+        }
+    
     //按創建房間按鈕切換至遊戲畫面
     const createBtn = document.getElementById("createRoom");
     createBtn.onclick = ()=>{
@@ -44,81 +113,32 @@ document.addEventListener("DOMContentLoaded", ()=>{
         competitorid = people_number2
         set(ref(firedb,'room/' + room_number + '/' ),{
             'people1': people_number1,
+            yourid: 0,
             'people2': people_number2,
+            competitorid: 0,
             'number' : 0
         });
-        update(ref(firedb,'game/' + room_number +'/' ),{
+        set(ref(firedb,'game/' + room_number +'/' ),{
             'win_keyword': word,
               });
+        console.log('youdid:'+yourid);
+        console.log('competitorid:'+competitorid);
+        console.log('word:'+word);
 
         document.getElementById("game").style.display = 'none';
         document.getElementById("title_container").style.display = 'none';
-        onValue((ref(firedb,'room/'+ room_number +"/" + "number")), snapshot => {   //一直去監聽
+        const enter_room = onValue((ref(firedb,'room/'+ room_number +"/" + "number")), snapshot => {   //一直去監聽
+                            let test = snapshot.val()
+                            console.log(snapshot.val())
+                            if (test == 1){
+                                readytime()
+                                off(enter_room)
 
-            let test = snapshot.val()
-            console.log(snapshot.val())
-            if (test == 1){
-                document.getElementById("game").style.display = '';
-                document.getElementsByClassName("room_id_title")[0].innerText = "roomId="+room_number;
-
-                startGame()
-                //update to start game
-                
-            }
-
-          });
-
-
-    }
-
-    const connectBtn = document.getElementById("connectRoom");
-    connectBtn.onclick = ()=>{
-
-        room_number =  parseInt(document.getElementsByClassName('roomId')[0].value);
-        //to get roomid is or not created
-        const three = onValue((ref(firedb,'room/'+ room_number +"/")), snapshot => {   //一直去監聽
-            let number2 = snapshot.val()
-            if (number2 != null) {
-                 //get you id
-        const five3  = get(child(rdbRef, `room/${room_number}/people2/`)).then((snapshot) => {
-                yourid=(snapshot.val())
-                console.log('youdid:'+yourid);
-                });
-    
-                //get competitorid
-        const five2 = get(child(rdbRef, `room/${room_number}/people1/`)).then((snapshot) => {
-                    //console.log(snapshot.val());
-                    var competitorid=(snapshot.val())
-                    console.log('competitorid:'+competitorid);
-                });
-    
-                //get word
-        const five52 = get(child(rdbRef, `game/${room_number}/win_keyword/`)).then((snapshot) => {
-                        //console.log(snapshot.val());
-                        word=snapshot.val()
-                        console.log('word:'+word);
-                    });
-    
-                //update to start game
-                const five4=update(ref(firedb,'room/' + room_number +'/' ),{
-                    'number': 1,
-                });
-                //start game and close memu
-                document.getElementById("game").style.display = '';
-                document.getElementById("title_container").style.display = 'none';
-                document.getElementsByClassName("room_id_title")[0].innerText = " roomId="+room_number;
-                startGame()
-
-    
-            }         
-            else {
-                Swal.fire({title:"錯誤",text:`沒有找到該房間請重新輸入`,icon:"error",color: "#dcdcdc"});
+                                //update to start game
             }
         });
+    };
 
-
-
-};
 
     //按問號顯示遊戲規則
     const help_btn = document.getElementById("help").addEventListener(
@@ -140,22 +160,26 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         const two = onValue((ref(firedb,'game/'+ room_number + "/win_name/")), snapshot => {
             console.log(snapshot.val())
-
             let name = snapshot.val()
             if (name != null){ 
             if (name==competitorid){
                 Swal.fire({title:"錯誤",text:`ㄅ歉，對手猜對了，你輸啦，正確單字為 ${word}。`,icon:"error",color: "#dcdcdc"});
+            }
+            if (name==yourid){
+                if(guessWords.length !== 7){
+                    Swal.fire({title:"恭喜!",text:"對手先猜錯了 你獲勝了!",icon:"success",color: "#dcdcdc"});
+
+                }
             }
             }
         });
         
         const one = onValue((ref(firedb,`game/${room_number}/${competitorid}/keyword/`)), snapshot => {
             console.log(snapshot.val())
-
-            let competitorkeyword = snapshot.val()
-            if (competitorkeyword != null){
+            competitorkeyword = snapshot.val()
+            if (competitorkeyword != null && competitorkeyword != '') {
                 console.log(competitorkeyword)
-                Swal.fire({title:"對手文字",text:` ${competitorkeyword}。`,icon:"error",color: "#dcdcdc"});
+                competitorhandleSubmitWord()
 
             };
         });
@@ -281,12 +305,25 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     //對手提交答案
     function competitorhandleSubmitWord(){
-
-
+        for (var i=0 ; i<5; i++){
+            const currentWord = competitorkeyword[i]
+            console.log(currentWord)
+            const tileColor = getTileColor(currentWord,i);
+            const letterId = competitortime
+            const interval = 200;
+            const letterEl= document.getElementById("square2_" + letterId);
+            letterEl.textContent = currentWord;
+            letterEl.classList.add("animate__flipInX");
+            letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
+            competitortime +=1;
+        }
+       
 
     }
 
     
+
+
     //按ENTER鍵提交答案
     function handleSubmitWord(){
         const currentWordArr = getCurrentWordArr();
@@ -296,7 +333,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
             const currentWord = currentWordArr.join('');
             const firstLetterId = guessedWordCount * 5 + 1;
             const interval = 200;
-
             currentWordArr.forEach((letter, index) => {
                 setTimeout(() =>{
                     const tileColor = getTileColor(letter,index);
@@ -311,19 +347,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
             guessWords.push([]);
             nextLetter = 0;
 
-            update(ref(firedb,'game/'+room_number+'/'+yourid+'/'),{
-                    'keyword' : currentWord,
-                    'number' : youtime
-                });
+            set(ref(firedb,'game/' + room_number +'/' +yourid+"/" ),{
+                'keyword': currentWord,
+                'number': youtime,    });
             youtime = youtime + 1;
-
+            
+            
             if(currentWord == word.toUpperCase()){
                 update(ref(firedb,'game/' + room_number +'/'),{
                     'win_name' : yourid,
                 });
-                Swal.fire({title:"恭喜!",text:"恭喜答對!",icon:"success",color: "#dcdcdc"});
+                Swal.fire({title:"恭喜!",text:"恭喜答對 你獲勝了!",icon:"success",color: "#dcdcdc"});
                 guessSucess = true;
-            }else if(guessWords.length === 7){
+            }else if(guessWords.length == 7){
                 update(ref(firedb,'game/' + room_number +'/'),{
                     'win_name' : competitorid,
                 });
