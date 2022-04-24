@@ -27,17 +27,14 @@
     <div id="title_container">
         <div id="option">
             <div class="room">
-                <div id="level_select">
-                    <label><input type="radio" id="normal" name="level" value="normal" checked>標準模式</label>
-                    <label><input type="radio" id="hard" name="level" value="hard">困難模式</label>
-                </div>
+                
                 <button id="createRoom">創建房間</button>
 
                 <div><h4 style="color: gainsboro; display: flex;justify-content: center;">
                     或輸入朋友所創建房間之ID</h4></div>
                 
-                <input class="roomId" placeholder="123456789" type="text" 
-                inputmode="numeric" maxlength="9" tabindex="0" >
+                <input class="roomId" placeholder="1234" type="text" 
+                inputmode="numeric" maxlength="4" tabindex="0" style="color: black;">
                 <button id="connectRoom">進入房間</button>
             </div>
         </div>
@@ -45,14 +42,14 @@
     </div>
 
     <div id="container">
-        <h4 class ="room_id_title" style="color: gainsboro; display: flex;justify-content: center;">Room ID</h4>
+        <h4 class ="room_id_title" style="color: gainsboro; display: flex;justify-content: center;"></h4>
 
         <div id="game">
 
             <div id="board_container">
                 <div class="board">
-                    <h4 class="player">PLAYER1</h4>
-                    <h4 class="player">PLAYER2</h4>
+                    <h4 class="player">PLAYER1 (YOU)</h4>
+                    <h4 class="player">PLAYER2 (YOUR FRIEND)</h4>
                     <div id="player1"></div>
                     <div id="player2"></div>
                 </div>

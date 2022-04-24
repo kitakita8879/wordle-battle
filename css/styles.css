@@ -1,3 +1,8 @@
+@font-face {
+    font-family: FakePearl-Regular;
+    src: url(https://cdn.jsdelivr.net/gh/max32002/FakePearl@1.1/webfont/FakePearl-Regular.woff2) format("woff2")
+    , url(https://cdn.jsdelivr.net/gh/max32002/FakePearl@1.1/webfont/FakePearl-Regular.woff) format("woff");
+  }
 *{
     margin: 0;
     padding: 0;
@@ -5,7 +10,7 @@
 
 html, body{
     height: 100%;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'FakePearl-Regular',Arial, Helvetica, sans-serif;
     background-color: black;
 }
 
@@ -24,7 +29,7 @@ header{
     font-weight: bold;
     margin: 0.4rem 0 0.4rem 0;
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'FakePearl-Regular',Arial, Helvetica, sans-serif;
 }
 
 .menu_right{
@@ -64,17 +69,8 @@ header{
     touch-action: manipulation;
 }
 
-#level_select{
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 2rem;
-    color: gainsboro;
-    display: flex;
-    justify-content: space-evenly;
-}
-
 .roomId{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'FakePearl-Regular',Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 1.5rem;
     color: gainsboro;
@@ -85,7 +81,7 @@ header{
 }
 
 .room button {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'FakePearl-Regular',Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 2rem;
     border: 0;
@@ -137,7 +133,7 @@ header{
     font-weight: bold;
     margin: 0.1rem 0 0 0;
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'FakePearl-Regular',Arial, Helvetica, sans-serif;
 }
 
 #player1 {
@@ -184,7 +180,7 @@ header{
 }
 
 .keyboard_row button {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'FakePearl-Regular',Arial, Helvetica, sans-serif;
     font-weight: bold;
     border: 0;
     padding: 0;
