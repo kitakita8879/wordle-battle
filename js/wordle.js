@@ -146,8 +146,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             Swal.fire({title: "遊戲說明",
             html: '． 輸入由5個字母組成的單字<br />' + 
             '． 灰色為沒有該字母<br />． 黃色為有該字母，但位置不對<br />． 綠色為字母和位置皆正確<br />' + 
-            '． 雙人對戰時，最快猜中答案者勝利<br />' + 
-            '． 困難模式下，任何已揭曉的提示必須在下一個輸入的答案中使用',
+            '． 雙人對戰時，最快猜中答案者勝利<br />',
             icon:"question",
             color: "#dcdcdc"});
         }
