@@ -3,6 +3,10 @@
     "express": "^4.17.3",
     "firebase": "^9.6.10",
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.14.1"
+    "firebase-functions": "^3.14.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "request-ip": "^2.1.3"
   }
 }
