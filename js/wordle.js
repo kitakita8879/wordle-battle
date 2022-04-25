@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const connectBtn = document.getElementById("connectRoom");
     connectBtn.onclick = ()=>{
 
+        document.getElementById("container").style.display = 'flex';
         room_number =  parseInt(document.getElementsByClassName('roomId')[0].value);
         //to get roomid is or not created
         //get you id
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 };
 
     function readytime(){
-
+        document.getElementById("container").style.display = 'flex';
         let time = 5
         let starttime = 1
         var timeoutID = setTimeout(timeout, 5000);
@@ -104,6 +105,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     //按創建房間按鈕切換至遊戲畫面
     const createBtn = document.getElementById("createRoom");
     createBtn.onclick = ()=>{
+        document.getElementById("container").style.display = 'flex';
         room_number = getRandom(1000,9999);
         var people_number1 = getRandom(10000,99999);
         var people_number2 = getRandom(10000,99999);
